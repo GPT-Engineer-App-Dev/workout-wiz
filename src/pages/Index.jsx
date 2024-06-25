@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
 import { toast } from "sonner";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const Index = () => {
   const [workouts, setWorkouts] = useState([]);
@@ -34,6 +34,12 @@ const Index = () => {
     setDate(workoutToEdit.date);
     handleDeleteWorkout(id);
   };
+
+  const data = workouts.map(workout => ({
+    date: workout.date,
+    duration: parseInt(workout.duration, 10)
+  }));
+
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-gray-100">
       <div className="max-w-md w-full space-y-8">
@@ -82,7 +88,7 @@ const Index = () => {
             </form>
           </CardContent>
         </Card>
-      <div className="space-y-4">
+        <div className="space-y-4">
           {workouts.map((workout) => (
             <Card key={workout.id}>
               <CardHeader>
@@ -99,6 +105,23 @@ const Index = () => {
             </Card>
           ))}
         </div>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-center text-2xl">Progress Over Time</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="duration" stroke="#8884d8" activeDot={{ r: 8 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
